@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cqut.why.authoringsystem.authoringsystem.dao.UserMapper">
+    <insert id="insert" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.User">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into user(name,username,password,tag)
+         values(#{name,jdbcType=VARCHAR},#{username,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{tag,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.User">
+        update user
+        set name = #{name,jdbcType=VARCHAR},
+            username = #{username,jdbcType=VARCHAR},
+            tag = #{tag,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="changeStatus">
+         update user set status = #{status}
+              where id = #{id}
+    </update>
+    <delete id="deleteUser">
+        delete from user
+         where id = #{id}
+    </delete>
 
 
     <select id="findByUsername" parameterType="java.lang.String"
@@ -29,7 +51,7 @@
 
     <select id="loadByUserName" parameterType="string"
             resultType="com.cqut.why.authoringsystem.authoringsystem.entity.User">
-    select user.id,name, username, password, contact_tel, status
+    select user.id,name, username, password, contact_tel,tag, status
     from user
       where  username = #{username}
   </select>
@@ -50,32 +72,38 @@
                 and user.name like concat('%',#{name},'%')
             </if>
             <if test="tag != '' and tag != null ">
-                and re.tag = #{tag}
+                and user.tag like concat('%',#{tag},'%')
             </if>
             <if test="status != '' and status != null">
-                and status like concat('%',#{status},'%')
+                and status = #{status}
             </if>
         </where>
     </select>
 
     <select id="selectPage" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.SysUserQueryParams" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.User">
-        select user.id,user.name, username, password, contact_tel, status, user.created_at,tag
-        from user
-        left join role re on `user`.id = re.user_id
+        select u.id,u.name, username, password, contact_tel, status, u.created_at,u.tag
+        from user u
+        left join role re on u.id = re.user_id
         <where>
             <if test="username != '' and username != null" >
                 and username like concat('%',#{username},'%')
             </if>
             <if test="name != '' and name != null" >
-                and user.name like concat('%',#{name},'%')
+                and u.name like concat('%',#{name},'%')
             </if>
             <if test="tag != '' and tag != null ">
-                and re.tag = #{tag}
+                and u.tag like concat('%',#{tag},'%')
             </if>
             <if test="status != '' and status != null">
-                and status like concat('%',#{status},'%')
+                and status = #{status}
             </if>
         </where>
         limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+
+    <select id="getUserById" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.User">
+        select id,username,name,tag
+        from user
+           where id = #{id,jdbcType=INTEGER}
     </select>
 </mapper>

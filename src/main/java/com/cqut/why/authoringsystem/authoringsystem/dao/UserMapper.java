@@ -5,6 +5,7 @@ import com.cqut.why.authoringsystem.authoringsystem.entity.Role;
 import com.cqut.why.authoringsystem.authoringsystem.entity.User;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ChangePasswordDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.PermissionEntity;
+import com.cqut.why.authoringsystem.authoringsystem.entity.dto.SysAddUserInfoDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.SysUserQueryParams;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -39,4 +40,14 @@ public interface UserMapper {
     Integer selectCount(SysUserQueryParams sysUserQueryParams);
 
     List<User> selectPage(SysUserQueryParams sysUserQueryParams);
+
+    User getUserById(Integer id);
+
+    int insert(User user);
+
+    int updateByPrimaryKey(User user);
+
+    int changeStatus(@Param("id") Integer id ,@Param("status") Integer status);
+
+    boolean deleteUser(Integer id);
 }

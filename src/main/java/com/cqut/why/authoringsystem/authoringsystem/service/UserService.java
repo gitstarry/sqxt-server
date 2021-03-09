@@ -2,9 +2,7 @@ package com.cqut.why.authoringsystem.authoringsystem.service;
 
 
 import com.cqut.why.authoringsystem.authoringsystem.entity.User;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ChangePasswordDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.UserInfoDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.UserLoginDTO;
+import com.cqut.why.authoringsystem.authoringsystem.entity.dto.*;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.SysUserQueryParams;
 
 import java.util.List;
@@ -21,4 +19,13 @@ public interface UserService {
 
     List<User> getSysUsers(SysUserQueryParams sysUserQueryParams);
 
+    User getById(Integer id);
+
+    boolean addOneUser(SysAddUserInfoDTO sysUserInfoDTO);
+
+    boolean modifyUser(SysUserInfoDTO sysUserInfoDTO);
+
+    int changeStatus(Integer id, Integer status);
+
+    boolean deleteUser(Integer id);
 }

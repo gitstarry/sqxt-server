@@ -26,6 +26,8 @@ public class User implements UserDetails {
 
     private String contactTel;
 
+    private String tag;
+
     private Integer status;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
@@ -118,5 +120,13 @@ public class User implements UserDetails {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }
