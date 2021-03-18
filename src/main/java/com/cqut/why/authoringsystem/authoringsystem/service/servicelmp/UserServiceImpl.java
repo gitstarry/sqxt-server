@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         UserInfoDTO userInfo = new UserInfoDTO();
         BeanUtils.copyProperties(user, userInfo);
         userInfo.setToken(token);
-        userInfo.setRoles((role.getTag() + "").split(","));
+        userInfo.setRoles((user.getTag() + "").split(","));
         return userInfo;
     }
 
@@ -126,6 +126,22 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("用户不存在");
         }
         return userMapper.deleteUser(id);
+    }
+
+    @Override
+    public boolean updatePassword(UserPwdDTO pwdDTO) {
+        User user = userMapper.getUserById(pwdDTO.getId());
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+        if (!passwordEncoder.matches(pwdDTO.getOriginPassword(), user.getPassword())) {
+            throw new BusinessException("原密码输入错误");
+        }
+        if (!pwdDTO.getNewPassword().equals(pwdDTO.getConfirmPassword())) {
+            throw new BusinessException("新密码输入不一致");
+        }
+        user.setPassword(passwordEncoder.encode(pwdDTO.getNewPassword()));
+        return userMapper.updateByPrimaryKey(user) == 1;
     }
 
 }

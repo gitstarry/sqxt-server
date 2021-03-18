@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqut.why.authoringsystem.authoringsystem.dao.LicenseMapper">
+    <insert id="insertLicense" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.License">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into license(equipment_id,customer_name,contract_no,project_name,equipment_name,equipment_sn
+         ,program_id)
+         values(#{equipmentId,jdbcType=INTEGER},#{customerName,jdbcType=VARCHAR},#{contractNo,jdbcType=VARCHAR},
+                #{projectName,jdbcType=VARCHAR},#{equipmentName,jdbcType=VARCHAR},#{equipmentSn,jdbcType=VARCHAR},
+                #{programId,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertLicenseDetail" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.LicenseDetail">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into license_detail(license_id,program_id,grant_at,expired_at,equipment_name,project_name,program_name,program_category)
+        values (#{licenseId,jdbcType=INTEGER},#{programId,jdbcType=INTEGER},#{grantAt,jdbcType=DATE},#{expiredAt,jdbcType=DATE},
+                #{equipmentName,jdbcType=VARCHAR},#{projectName,jdbcType=VARCHAR},#{programName,jdbcType=VARCHAR},#{programCategory,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertProgramVersion" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.EquipmentProgramVersion">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into equipment_program_version(equipment_id,program_version_id,upgrade_user_id,upgrade_at,equipment_name,equipment_sn,program_id,program_name,
+        program_version,program_version_order,program_category)
+        values (#{equipmentId,jdbcType=INTEGER},#{programVersionId,jdbcType=INTEGER},#{upgradeUserId,jdbcType=INTEGER},#{upgradeAt,jdbcType=DATE},
+        #{equipmentName,jdbcType=VARCHAR},#{equipmentSn,jdbcType=VARCHAR},#{programId,jdbcType=INTEGER},#{programName,jdbcType=VARCHAR},#{programVersion,jdbcType=VARCHAR},
+        #{programVersionOrder,jdbcType=INTEGER},#{programCategory,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectLicenseCount" resultType="java.lang.Integer">
+        select COUNT(*) from license le
+        left join program pm on le.program_id = pm.id
+        left join equipment ept on le.equipment_id = ept.id
+        left join license_detail ld on ld.license_id = le.id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and le.project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and le.equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="insertedAt != '' and insertedAt != null ">
+                and le.inserted_at like concat('%',#{insertedAt},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectLicensePage"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.LicenseInfoDTO">
+        select le.id,le.contract_no, le.customer_name, le.equipment_name, le.equipment_sn,le.project_name,
+        le.inserted_at,receive_user_name, ld.grant_at, ld.expired_at,program_name
+        from license le
+        left join program pm on le.program_id = pm.id
+        left join equipment ept on le.equipment_id = ept.id
+        left join license_detail ld on ld.license_id = le.id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and le.project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and le.equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="insertedAt != '' and insertedAt != null ">
+                and le.inserted_at like concat('%',#{insertedAt},'%')
+            </if>
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="checkProgram" resultType="java.lang.Integer">
+        select id from program where name = #{programName}
+    </select>
+    <select id="checkEquipment" resultType="java.lang.Integer">
+         select id from equipment where name = #{equipmentName}
+    </select>
+    <select id="checkLicense" resultType="java.lang.Integer">
+        select id from license where project_name = #{param2} and equipment_name = #{param1}
+    </select>
+    <select id="checkProgramVersion" resultType="java.lang.Integer">
+        select id from program_version where program_id = #{programId}
+    </select>
+    <select id="checkProgramUpgradeLog" resultType="java.lang.Integer">
+        select upgrade_user_id from program_upgrade_log where equipment_id = #{equipmentId}
+    </select>
+    <select id="checkUpgrade" resultType="java.util.Date">
+        select upgrade_at from program_upgrade_log where equipment_id = #{equipmentId}
+    </select>
+    <select id="checkProgramVersionOrder" resultType="java.lang.Integer">
+        select orderId from program_version where program_id = #{programId}
+    </select>
+</mapper>

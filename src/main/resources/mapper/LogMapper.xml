@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqut.why.authoringsystem.authoringsystem.dao.LogMapper">
+
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        select COUNT(*) from program_upgrade_log pul
+        left join equipment ept on pul.equipment_id = ept.id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and pul.project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and pul.equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="insertedAt != '' and insertedAt != null ">
+                and pul.inserted_at like concat('%',#{insertedAt},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectPage" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramUpgradeLog">
+        select pul.id,contract_no, customer_name, pul.equipment_name, pul.equipment_sn, pul.program_category, pul.program_version,pul.project_name,
+        pul.inserted_at,status,remark
+        from program_upgrade_log pul
+        left join equipment ept on pul.equipment_id = ept.id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and pul.project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and pul.equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="insertedAt != '' and insertedAt != null ">
+                and pul.inserted_at like concat(#{insertedAt},'%')
+            </if>
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="selectConnectCount" resultType="java.lang.Integer">
+        select COUNT(*) from equipment_connect_log ecl
+        left join equipment ept on ecl.equipment_id = ept.id
+        <where>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and ecl.equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="equipmentSn != '' and equipmentSn != null" >
+                and ecl.equipment_sn like concat('%',#{equipmentSn},'%')
+            </if>
+            <if test="model != '' and model != null ">
+                and model like concat('%',#{model},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectConnectPage"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.EquipmentConnectLog">
+        select ecl.id,ip,equipment_name, equipment_sn,ecl.inserted_at,model
+        from equipment_connect_log ecl
+        left join equipment ept on ecl.equipment_id = ept.id
+        <where>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="equipmentSn != '' and equipmentSn != null" >
+                and equipment_sn like concat('%',#{equipmentSn},'%')
+            </if>
+            <if test="model != '' and model != null ">
+                and model like concat('%',#{model},'%')
+            </if>
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="selectLicenseCount" resultType="java.lang.Integer">
+        select COUNT(*) from license le
+        left join program pm on le.program_id = pm.id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and le.project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and le.equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="insertedAt != '' and insertedAt != null ">
+                and le.inserted_at like concat('%',#{insertedAt},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectLicensePage" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.License">
+        select le.id,le.contract_no, le.customer_name, le.equipment_name, le.equipment_sn, category, latest_version,le.project_name,
+        le.inserted_at,create_user_name
+        from license le
+        left join program pm on le.program_id = pm.id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and le.project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and le.equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="insertedAt != '' and insertedAt != null ">
+                and le.inserted_at like concat('%',#{insertedAt},'%')
+            </if>
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+</mapper>

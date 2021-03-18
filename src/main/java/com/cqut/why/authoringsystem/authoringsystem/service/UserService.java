@@ -28,4 +28,6 @@ public interface UserService {
     int changeStatus(Integer id, Integer status);
 
     boolean deleteUser(Integer id);
+
+    boolean updatePassword(UserPwdDTO pwdDTO);
 }

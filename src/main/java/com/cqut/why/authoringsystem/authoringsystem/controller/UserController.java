@@ -165,4 +165,17 @@ public class UserController extends BaseController{
         }
     }
 
+    @ApiOperation(value = "修改密码")
+    @PostMapping("/modifyPassword")
+    public JSONResult updatePassword(@RequestBody UserPwdDTO pwdDTO) {
+        JSONResult jsonResult = new JSONResult();
+        boolean updated = userService.updatePassword(pwdDTO);
+        if (updated) {
+            jsonResult.setMessage(new Message("DB.UPDATE_SUCCESS", "用户密码"));
+            return jsonResult;
+        } else {
+            throw new BusinessException(new Message("DB.UPDATE_FAILED", "用户密码"));
+        }
+    }
+
 }
