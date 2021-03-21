@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqut.why.authoringsystem.authoringsystem.dao.ProjectInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.cqut.why.authoringsystem.authoringsystem.entity.ProjectInfo">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="no" jdbcType="VARCHAR" property="no" />
+        <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+        <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
+        <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+        <result column="contract_id" jdbcType="INTEGER" property="contractId" />
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+        <result column="contract_no" jdbcType="VARCHAR" property="contractNo" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+        <result column="inserted_at" property="insertedAt" />
+        <result column="updated_at" property="updatedAt" />
+
+    </resultMap>
+
+
+    <select id="selectAllProjectInfo" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO">
+        select p.id, p.no, p.name, p.inserted_at as insertedAt, u.name as uName,
+         c.name as cName, c.contact_name as contactName, c.contact_tel as contactTel
+        from project p
+        LEFT JOIN `user` u ON (u.id = p.create_user_id)
+        LEFT JOIN customer c ON (c.id = p.customer_id)
+        ORDER   BY
+        p.inserted_at   DESC
+    </select>
+
+    <select id="selectAllLike" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO">
+        select p.no, p.name, p.inserted_at as insertedAt, u.name as uName,
+        c.name as cName, c.contact_name as contactName, c.contact_tel as contactTel
+        from project p
+        INNER JOIN `user` u ON (u.id = p.create_user_id)
+        INNER JOIN customer c ON (c.id = p.customer_id)
+        <where>
+            <if test="no != '' and no != null" >
+                and p.no = #{no}
+            </if>
+            <if test="name != '' and name != null" >
+                and p.name like concat('%',#{name},'%')
+            </if>
+            <if test="cName != '' and cName != null" >
+                and c.name like concat('%',#{cName},'%')
+            </if>
+        </where>
+        ORDER   BY
+        p.inserted_at   DESC
+    </select>
+
+    <insert id="addProjectInfo" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+        SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into customer(name,contact_name,contact_tel)
+    values(#{cName}, #{contactName}, #{contactTel})
+</insert>
+    <insert id="addProject" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into project(customer_id, no, name)
+        values(#{id}, #{no}, #{name})
+    </insert>
+    <update id="updateProjectInfo">
+         update project set customer_id = #{id}, no = #{no}, name = #{name}
+              where id = #{pId};
+    </update>
+    <update id="updateCustomer">
+         update customer set name = #{cName}, contact_name = #{contactName},
+        contact_tel = #{contactTel}
+        where id = #{id};
+    </update>
+
+    <select id="selectAllEquipmentInfo" parameterType="java.lang.String" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentInfoDTO">
+        select e.id, e.name, e.model, e.sn, e.grant_at as grantAt, e.activate_at as activateAt,
+        e.receive_user_name as receiveUserName, e.contract_no as contractNo, epv.program_name as pName,
+        epv.program_category as category
+        from equipment e
+        LEFT JOIN equipment_program_version epv ON (epv.equipment_id = e.id)
+        WHERE e.project_name = #{prjName}
+    </select>
+    <select id="selectAllEquipmentDetail" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailDTO">
+        select id, name, sn, create_user_id as createUserId, inserted_at as insertedAt
+        from equipment
+    </select>
+    <delete id="deleteProject" parameterType="java.lang.Integer">
+        delete from project
+         where id = #{id}
+    </delete>
+    <insert id="addEquipment" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into equipment(name,model,sn, create_user_id, update_user_id)
+        values(#{name}, #{model}, #{sn}, #{id}, #{id} )
+    </insert>
+
+    <select id="selectEquipmentLike" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams">
+        select id, name, sn, create_user_id as createUserId, inserted_at as insertedAt
+        from equipment
+        <where>
+            <if test="name != '' and name != null" >
+                and name = #{name}
+            </if>
+            <if test="model != '' and model != null" >
+                and model like concat('%',#{model},'%')
+            </if>
+            <if test="sn != '' and sn != null" >
+                and sn like concat('%',#{sn},'%')
+            </if>
+        </where>
+    </select>
+    <select id="getEquipmentDetailInfo" parameterType="java.lang.Integer"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailInfoDTO">
+        select e.name as eName,e.model, e.sn,e.inserted_at as insertedAt,e.create_user_name as createUserName,
+        e.grant_at as grantAt, e.activate_at as activateAt,e.receive_user_name as receiveUserName,
+        p.name as pName, p.no as no,cus.name as cName,cus.contact_name as contactName,
+        cus.contact_name as contactTel
+        from equipment e
+        LEFT JOIN project p ON (p.name = e.project_name)
+        LEFT JOIN customer cus ON (cus.name = e.customer_name)
+    </select>
+</mapper>

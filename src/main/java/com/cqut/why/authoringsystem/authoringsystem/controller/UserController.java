@@ -177,5 +177,4 @@ public class UserController extends BaseController{
             throw new BusinessException(new Message("DB.UPDATE_FAILED", "用户密码"));
         }
     }
-
 }

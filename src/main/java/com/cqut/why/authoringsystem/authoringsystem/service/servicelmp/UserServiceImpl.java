@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("用户尚未注册");
         }
         System.out.println(user.getPassword());
+        System.out.println(loginDTO.getPassword());
         System.out.println(passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()));
         //如果密码错误则抛出异常
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
