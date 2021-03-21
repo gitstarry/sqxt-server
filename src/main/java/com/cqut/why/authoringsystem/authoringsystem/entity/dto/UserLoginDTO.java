@@ -9,7 +9,7 @@ public class UserLoginDTO {
     @NotNull
     private String password;
     @NotNull
-    private String captcha;
+        private String captcha;
 
     public String getUsername() {
         return username;
