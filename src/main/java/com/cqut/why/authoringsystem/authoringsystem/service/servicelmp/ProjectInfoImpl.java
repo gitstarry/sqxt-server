@@ -3,11 +3,7 @@ package com.cqut.why.authoringsystem.authoringsystem.service.servicelmp;
 
 
 import com.cqut.why.authoringsystem.authoringsystem.dao.ProjectInfoMapper;
-import com.cqut.why.authoringsystem.authoringsystem.entity.ProjectInfo;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailInfoDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentInfoDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO;
+import com.cqut.why.authoringsystem.authoringsystem.entity.dto.*;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams;
 import com.cqut.why.authoringsystem.authoringsystem.service.ProjectInfoService;

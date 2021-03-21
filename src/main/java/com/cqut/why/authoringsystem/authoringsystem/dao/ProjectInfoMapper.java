@@ -1,10 +1,6 @@
 package com.cqut.why.authoringsystem.authoringsystem.dao;
 
-import com.cqut.why.authoringsystem.authoringsystem.entity.Equipment;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailInfoDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentInfoDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO;
+import com.cqut.why.authoringsystem.authoringsystem.entity.dto.*;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams;
 import org.apache.ibatis.annotations.Mapper;

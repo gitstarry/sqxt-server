@@ -4,12 +4,9 @@ import com.cqut.why.authoringsystem.authoringsystem.config.util.BeanMapper.BeanM
 import com.cqut.why.authoringsystem.authoringsystem.config.util.GlobalExceptionHandler.BusinessException;
 import com.cqut.why.authoringsystem.authoringsystem.config.util.jsonResult.JSONResult;
 import com.cqut.why.authoringsystem.authoringsystem.config.util.message.Message;
-import com.cqut.why.authoringsystem.authoringsystem.entity.EquipmentProgramVersion;
-import com.cqut.why.authoringsystem.authoringsystem.entity.License;
 import com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.*;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentUpgradeParams;
-import com.cqut.why.authoringsystem.authoringsystem.entity.params.LicenseParams;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectParams;
 import com.cqut.why.authoringsystem.authoringsystem.service.ProjectService;
 import io.swagger.annotations.Api;
@@ -43,7 +40,7 @@ public class ProjectController {
 
     @ApiOperation(value = "修改测试信息")
     @PostMapping("/modifyProject")
-    public JSONResult modifyProject(@RequestBody ProjectInfoDTO projectInfoDTO) {
+    public JSONResult modifyProject(@RequestBody ProjectInfosDTO projectInfoDTO) {
         JSONResult jsonResult = new JSONResult();
         boolean updated = projectService.modifyUser(projectInfoDTO);
         if (updated) {

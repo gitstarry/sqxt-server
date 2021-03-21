@@ -2,7 +2,6 @@ package com.cqut.why.authoringsystem.authoringsystem.controller;
 
 
 import com.cqut.why.authoringsystem.authoringsystem.config.util.jsonResult.JSONResult;
-import com.cqut.why.authoringsystem.authoringsystem.entity.ProjectInfo;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.*;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams;

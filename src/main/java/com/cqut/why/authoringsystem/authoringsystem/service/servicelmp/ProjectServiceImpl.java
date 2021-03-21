@@ -8,7 +8,7 @@ import com.cqut.why.authoringsystem.authoringsystem.entity.ProgramUpgradeLog;
 import com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentUpgradeDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentUpgradeStatusDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO;
+import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfosDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentUpgradeParams;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectParams;
 import com.cqut.why.authoringsystem.authoringsystem.service.ProjectService;
@@ -37,7 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean modifyUser(ProjectInfoDTO projectInfoDTO) {
+    public boolean modifyUser(ProjectInfosDTO projectInfoDTO) {
         ProgramVersion programVersion = projectMapper.selectId(projectInfoDTO.getId());
         if (programVersion == null) {
             throw new BusinessException("该测试不存在");

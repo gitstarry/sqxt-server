@@ -3,7 +3,7 @@ package com.cqut.why.authoringsystem.authoringsystem.service;
 import com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentUpgradeDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentUpgradeStatusDTO;
-import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO;
+import com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfosDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentUpgradeParams;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectParams;
 
@@ -14,7 +14,7 @@ public interface ProjectService {
 
     List<ProgramVersion> getProjectLog(ProjectParams projectParams);
 
-    boolean modifyUser(ProjectInfoDTO projectInfoDTO);
+    boolean modifyUser(ProjectInfosDTO projectInfoDTO);
 
     Integer getEquipmentCount(EquipmentUpgradeParams equipmentUpgradeParams);
 
