@@ -5,9 +5,9 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into license(equipment_id,customer_name,contract_no,project_name,equipment_name,equipment_sn
+        insert into license(sn,equipment_id,customer_name,contract_no,project_name,equipment_name,equipment_sn
          ,program_id)
-         values(#{equipmentId,jdbcType=INTEGER},#{customerName,jdbcType=VARCHAR},#{contractNo,jdbcType=VARCHAR},
+         values(#{sn,jdbcType=VARCHAR},#{equipmentId,jdbcType=INTEGER},#{customerName,jdbcType=VARCHAR},#{contractNo,jdbcType=VARCHAR},
                 #{projectName,jdbcType=VARCHAR},#{equipmentName,jdbcType=VARCHAR},#{equipmentSn,jdbcType=VARCHAR},
                 #{programId,jdbcType=INTEGER})
     </insert>
@@ -23,10 +23,10 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into equipment_program_version(equipment_id,program_version_id,upgrade_user_id,upgrade_at,equipment_name,equipment_sn,program_id,program_name,
+        insert into equipment_program_version(equipment_id,program_version_id,upgrade_at,equipment_name,equipment_sn,project_id,project_name,program_id,program_name,
         program_version,program_version_order,program_category)
-        values (#{equipmentId,jdbcType=INTEGER},#{programVersionId,jdbcType=INTEGER},#{upgradeUserId,jdbcType=INTEGER},#{upgradeAt,jdbcType=DATE},
-        #{equipmentName,jdbcType=VARCHAR},#{equipmentSn,jdbcType=VARCHAR},#{programId,jdbcType=INTEGER},#{programName,jdbcType=VARCHAR},#{programVersion,jdbcType=VARCHAR},
+        values (#{equipmentId,jdbcType=INTEGER},#{programVersionId,jdbcType=INTEGER},#{upgradeAt,jdbcType=DATE},
+        #{equipmentName,jdbcType=VARCHAR},#{equipmentSn,jdbcType=VARCHAR},#{projectId,jdbcType=INTEGER},#{projectName,jdbcType=VARCHAR},#{programId,jdbcType=INTEGER},#{programName,jdbcType=VARCHAR},#{programVersion,jdbcType=VARCHAR},
         #{programVersionOrder,jdbcType=INTEGER},#{programCategory,jdbcType=VARCHAR})
     </insert>
 
@@ -75,18 +75,30 @@
          select id from equipment where name = #{equipmentName}
     </select>
     <select id="checkLicense" resultType="java.lang.Integer">
-        select id from license where project_name = #{param2} and equipment_name = #{param1}
+        select id from license where project_name = #{param2} and equipment_name = #{param1} and sn = #{param3}
     </select>
     <select id="checkProgramVersion" resultType="java.lang.Integer">
-        select id from program_version where program_id = #{programId}
+        select id from program_version where program_id = #{param1} and version = #{param2}
     </select>
     <select id="checkProgramUpgradeLog" resultType="java.lang.Integer">
         select upgrade_user_id from program_upgrade_log where equipment_id = #{equipmentId}
     </select>
-    <select id="checkUpgrade" resultType="java.util.Date">
-        select upgrade_at from program_upgrade_log where equipment_id = #{equipmentId}
-    </select>
     <select id="checkProgramVersionOrder" resultType="java.lang.Integer">
         select orderId from program_version where program_id = #{programId}
+    </select>
+    <select id="checkProgramVersion1" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion">
+         select id from program_version where program_id = #{param1} and version = #{param2}
+    </select>
+    <select id="checkEquipment1" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Equipment">
+        select id from equipment where name = #{equipmentName}
+    </select>
+    <select id="checkProgram1" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+         select id from program where name = #{programName}
+    </select>
+    <select id="checkProject" resultType="java.lang.Integer">
+        select id from project where name = #{projectName}
+    </select>
+    <select id="checkProject1" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.ProjectInfo">
+         select id from project where name = #{projectName}
     </select>
 </mapper>

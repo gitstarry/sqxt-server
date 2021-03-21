@@ -1,10 +1,9 @@
 package com.cqut.why.authoringsystem.authoringsystem.service.servicelmp;
 
 import com.cqut.why.authoringsystem.authoringsystem.config.util.BeanMapper.BeanMapper;
+import com.cqut.why.authoringsystem.authoringsystem.config.util.GlobalExceptionHandler.BusinessException;
 import com.cqut.why.authoringsystem.authoringsystem.dao.LicenseMapper;
-import com.cqut.why.authoringsystem.authoringsystem.entity.EquipmentProgramVersion;
-import com.cqut.why.authoringsystem.authoringsystem.entity.License;
-import com.cqut.why.authoringsystem.authoringsystem.entity.LicenseDetail;
+import com.cqut.why.authoringsystem.authoringsystem.entity.*;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.LicenseChangeDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.dto.LicenseInfoDTO;
 import com.cqut.why.authoringsystem.authoringsystem.entity.params.LicenseParams;
@@ -36,7 +35,20 @@ public class LicenseServiceImpl implements LicenseService {
 
     @Override
     public boolean addLicense(LicenseChangeDTO licenseChangeDTO) throws ParseException {
+        Program program = licenseMapper.checkProgram1(licenseChangeDTO.getProgramName());
+        if(program == null) {
+            throw new BusinessException("该算法不存在");
+        }
         int programId = licenseMapper.checkProgram(licenseChangeDTO.getProgramName());
+        Equipment equipment = licenseMapper.checkEquipment1(licenseChangeDTO.getEquipmentName());
+        if(equipment == null) {
+            throw new BusinessException("该设备不存在");
+        }
+        ProjectInfo project = licenseMapper.checkProject1(licenseChangeDTO.getProjectName());
+        if(project == null) {
+            throw new BusinessException("该项目不存在");
+        }
+        int projectId = licenseMapper.checkProject(licenseChangeDTO.getProjectName());
         int equipmentId = licenseMapper.checkEquipment(licenseChangeDTO.getEquipmentName());
         String[] s = licenseChangeDTO.getGrantedAt().split("~");
         SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd");
@@ -46,24 +58,27 @@ public class LicenseServiceImpl implements LicenseService {
         License license = BeanMapper.map(licenseChangeDTO, License.class);
         license.setEquipmentId(equipmentId);
         license.setProgramId(programId);
+        license.setSn(String.valueOf(Math.random()*100000 +10000));
         licenseMapper.insertLicense(license);
 
-        int programVersionId = licenseMapper.checkProgramVersion(programId);
+        ProgramVersion programVersion = licenseMapper.checkProgramVersion1(programId,licenseChangeDTO.getLatestVersion());
+        if(programVersion == null) {
+            throw new BusinessException("该版本不存在");
+        }
+        int programVersionId = licenseMapper.checkProgramVersion(programId,licenseChangeDTO.getLatestVersion());
         int orderId = licenseMapper.checkProgramVersionOrder(programId);
-        int upgrade_user_id = licenseMapper.checkProgramUpgradeLog(equipmentId);
-        Date upgrade_at = licenseMapper.checkUpgrade(equipmentId);
         EquipmentProgramVersion equipmentProgramVersion = BeanMapper.map(licenseChangeDTO,EquipmentProgramVersion.class);
         equipmentProgramVersion.setProgramVersion(licenseChangeDTO.getLatestVersion());
         equipmentProgramVersion.setProgramVersionId(programVersionId);
         equipmentProgramVersion.setEquipmentId(equipmentId);
         equipmentProgramVersion.setProgramId(programId);
-        equipmentProgramVersion.setUpgradeAt(upgrade_at);
-        equipmentProgramVersion.setUpgradeUserId(upgrade_user_id);
         equipmentProgramVersion.setProgramVersionOrder(orderId);
+        equipmentProgramVersion.setProjectId(projectId);
+        equipmentProgramVersion.setProjectName(licenseChangeDTO.getProjectName());
         licenseMapper.insertProgramVersion(equipmentProgramVersion);
 
 
-        int licenseId = licenseMapper.checkLicense(licenseChangeDTO.getEquipmentName(),licenseChangeDTO.getProjectName());
+        int licenseId = licenseMapper.checkLicense(licenseChangeDTO.getEquipmentName(),licenseChangeDTO.getProjectName(),license.getSn());
         LicenseDetail licenseDetail = BeanMapper.map(licenseChangeDTO,LicenseDetail.class);
         licenseDetail.setLicenseId(licenseId);
         licenseDetail.setGrantAt(grantAt);

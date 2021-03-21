@@ -1,11 +1,13 @@
 package com.cqut.why.authoringsystem.authoringsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Equipment {
     private Integer id;
 
-    private String equipmentName;
+    private String name;
 
     private String model;
 
@@ -15,7 +17,18 @@ public class Equipment {
 
     private String customerName;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date updatedAt;
+
+    private Integer updateUserId;
+
+    private Integer upgradeStatus;
+
+    private Integer status;
+
     private String contractNo;
+
+    private String projectName;
 
     private Date grantAt;
 
@@ -29,12 +42,12 @@ public class Equipment {
         this.id = id;
     }
 
-    public String getEquipmentName() {
-        return equipmentName;
+    public String getName() {
+        return name;
     }
 
-    public void setEquipmentName(String equipmentName) {
-        this.equipmentName = equipmentName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getModel() {
@@ -91,5 +104,44 @@ public class Equipment {
 
     public void setReceivedAt(Date receivedAt) {
         this.receivedAt = receivedAt;
+    }
+    public Integer getUpgradeStatus() {
+        return upgradeStatus;
+    }
+
+    public void setUpgradeStatus(Integer upgradeStatus) {
+        this.upgradeStatus = upgradeStatus;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }

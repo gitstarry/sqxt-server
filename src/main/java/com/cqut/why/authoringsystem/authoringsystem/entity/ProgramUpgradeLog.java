@@ -9,6 +9,8 @@ public class ProgramUpgradeLog {
 
     private int equipmentId;
 
+    private int programId;
+
     private String remark;
 
     private String equipmentName;
@@ -19,7 +21,14 @@ public class ProgramUpgradeLog {
 
     private String programVersion;
 
+    private String programName;
+
+    private Integer upgradeUserId;
+
     private String projectName;
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date upgradeAt;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date insertedAt;
@@ -124,5 +133,37 @@ public class ProgramUpgradeLog {
 
     public void setContractNo(String contractNo) {
         this.contractNo = contractNo;
+    }
+
+    public Date getUpgradeAt() {
+        return upgradeAt;
+    }
+
+    public void setUpgradeAt(Date upgradeAt) {
+        this.upgradeAt = upgradeAt;
+    }
+
+    public int getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(int programId) {
+        this.programId = programId;
+    }
+
+    public Integer getUpgradeUserId() {
+        return upgradeUserId;
+    }
+
+    public void setUpgradeUserId(Integer upgradeUserId) {
+        this.upgradeUserId = upgradeUserId;
+    }
+
+    public String getProgramName() {
+        return programName;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
     }
 }

@@ -30,6 +30,8 @@ public class License {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date insertedAt;
 
+    private String sn;
+
 
     public String getProjectName() {
         return projectName;
@@ -121,5 +123,17 @@ public class License {
 
     public void setProgramId(Integer programId) {
         this.programId = programId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 }

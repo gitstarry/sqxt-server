@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cqut.why.authoringsystem.authoringsystem.dao.ProjectMapper">
+    <insert id="insert" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramUpgradeLog">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into program_upgrade_log(equipment_id,remark,upgrade_at,upgrade_user_id,equipment_sn,equipment_name,program_id,program_category,program_version
+        ,program_name,project_name)
+        values (#{equipmentId,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR},#{upgradeAt,jdbcType=DATE},#{upgradeUserId,jdbcType=INTEGER},
+                #{equipmentSn,jdbcType=VARCHAR},#{equipmentName,jdbcType=VARCHAR},#{programId,jdbcType=INTEGER},#{programCategory,jdbcType=VARCHAR},
+                #{programVersion,jdbcType=VARCHAR},#{programName,jdbcType=VARCHAR},#{projectName,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateByProgramVersionKey">
+        update program_version
+         set status = #{status}
+         where id = #{id}
+    </update>
+    <update id="updateByProgramKey">
+        update program
+        set remark = #{param1}, latest_version = #{param3}
+        where id =#{param2}
+    </update>
+    <update id="updateEquipment">
+        update equipment
+        set status = #{status}, upgrade_status = #{upgradeStatus}
+        where id = #{id}
+    </update>
+    <update id="updateByProgramKey1">
+        update program
+        set remark = #{param1}
+        where id =#{param2}
+    </update>
 
     <select id="selectProjectCount" resultType="java.lang.Integer">
         select COUNT(*) from program_version
@@ -31,6 +61,54 @@
                 and status like concat('%',#{status},'%')
             </if>
         </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="selectId" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion">
+        select status,program_id, version from program_version where id = #{id}
+    </select>
+    <select id="selectProgram" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+        select id, remark from  program where id = #{programId}
+    </select>
+    <select id="selectEquipmentCount" resultType="java.lang.Integer">
+        select COUNT(*) from equipment_program_version epv
+        left join equipment et on et.id = epv.equipment_id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="upgradeStatus != '' and upgradeStatus != null ">
+                and upgrade_status like concat('%',#{upgradeStatus},'%')
+            </if>
+            and program_version_id = #{versionId}
+        </where>
+    </select>
+    <select id="selectEquipmentPage"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentUpgradeDTO">
+        select et.id,project_name, contract_no, equipment_name, model, equipment_sn, program_name,program_version,upgrade_status
+        from equipment_program_version epv
+        left join equipment et on et.id = epv.equipment_id
+        <where>
+            <if test="projectName != '' and projectName != null" >
+                and project_name like concat('%',#{projectName},'%')
+            </if>
+            <if test="equipmentName != '' and equipmentName != null" >
+                and equipment_name like concat('%',#{equipmentName},'%')
+            </if>
+            <if test="upgradeStatus != '' and upgradeStatus != null ">
+                and upgrade_status like concat('%',#{upgradeStatus},'%')
+            </if>
+            and program_version_id = #{versionId}
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="selectEquipmentId" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Equipment">
+        select id,name,sn,update_user_id,updated_at,upgrade_status,status,project_name,customer_name,contract_no from equipment where id = #{id}
+    </select>
+    <select id="selectProgramId" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+       select id,name,category,latest_version,description from program where name = #{programName}
     </select>
 
 </mapper>
