@@ -73,10 +73,16 @@ public class LicenseServiceImpl implements LicenseService {
         equipmentProgramVersion.setEquipmentId(equipmentId);
         equipmentProgramVersion.setProgramId(programId);
         equipmentProgramVersion.setProgramVersionOrder(orderId);
-        equipmentProgramVersion.setProjectId(projectId);
-        equipmentProgramVersion.setProjectName(licenseChangeDTO.getProjectName());
         licenseMapper.insertProgramVersion(equipmentProgramVersion);
 
+        LicenseMigrationDetail licenseMigrationDetail = BeanMapper.map(licenseChangeDTO,LicenseMigrationDetail.class);
+        licenseMigrationDetail.setEquipmentId(equipmentId);
+        licenseMigrationDetail.setProjectId(projectId);
+        licenseMigrationDetail.setEquipmentModel(equipment.getModel());
+        licenseMigrationDetail.setGrantAt(grantAt);
+        licenseMigrationDetail.setActivateAt(grantAt);
+        licenseMigrationDetail.setReceiveUserName(equipment.getReceiveUserName());
+        licenseMapper.insertLicenseMigrationDetail(licenseMigrationDetail);
 
         int licenseId = licenseMapper.checkLicense(licenseChangeDTO.getEquipmentName(),licenseChangeDTO.getProjectName(),license.getSn());
         LicenseDetail licenseDetail = BeanMapper.map(licenseChangeDTO,LicenseDetail.class);

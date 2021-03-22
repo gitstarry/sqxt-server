@@ -3,11 +3,13 @@ package com.cqut.why.authoringsystem.authoringsystem.entity.params;
 public class ProjectInfoParams {
     private Integer id; // 客户id
     private Integer pId; // 项目id
+    private Integer uId;
     private String no;
     private String name;
     private String cName;
     private String contactName;
     private String contactTel;
+    private String createUserName;
 
     public String getNo() {
         return no;
@@ -63,5 +65,21 @@ public class ProjectInfoParams {
 
     public void setpId(Integer pId) {
         this.pId = pId;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Integer getuId() {
+        return uId;
+    }
+
+    public void setuId(Integer uId) {
+        this.uId = uId;
     }
 }

@@ -24,15 +24,24 @@ public class Equipment {
 
     private Integer upgradeStatus;
 
+    private Integer createUserId;
+
+    private String createUserName;
+
     private Integer status;
 
     private String contractNo;
 
     private String projectName;
 
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date insertedAt;
+
     private Date grantAt;
 
     private Date receivedAt;
+
+    private Boolean check;
 
     public Integer getId() {
         return id;
@@ -143,5 +152,37 @@ public class Equipment {
 
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Date getInsertedAt() {
+        return insertedAt;
+    }
+
+    public void setInsertedAt(Date insertedAt) {
+        this.insertedAt = insertedAt;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Boolean getCheck() {
+        return check;
+    }
+
+    public void setCheck(Boolean check) {
+        this.check = check;
     }
 }

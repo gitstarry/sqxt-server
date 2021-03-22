@@ -44,4 +44,6 @@ public interface LicenseMapper {
     int checkProject(String projectName);
 
     ProjectInfo checkProject1(String projectName);
+
+    void insertLicenseMigrationDetail(LicenseMigrationDetail licenseMigrationDetail);
 }

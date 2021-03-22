@@ -1,18 +1,25 @@
 package com.cqut.why.authoringsystem.authoringsystem.entity.dto;
 
-import javax.xml.crypto.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
 
 public class EquipmentInfoDTO {
     private Integer id;
-    private String name;
-    private String model;
-    private String sn;
-    private Data grantAt;
-    private Data activateAt;
+    private String equipmentName;
+    private String equipmentModel;
+    private String equipmentSn;
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date grantAt;
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date activateAt;
     private String receiveUserName;
     private String contractNo;
-    private String pName; // 算法名称
-    private String category; // 类型（0算法，1软件）
+    private String programName; // 算法名称
+
+    public EquipmentInfoDTO() {
+    }
 
     public Integer getId() {
         return id;
@@ -22,43 +29,43 @@ public class EquipmentInfoDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getEquipmentName() {
+        return equipmentName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEquipmentName(String equipmentName) {
+        this.equipmentName = equipmentName;
     }
 
-    public String getModel() {
-        return model;
+    public String getEquipmentModel() {
+        return equipmentModel;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setEquipmentModel(String equipmentModel) {
+        this.equipmentModel = equipmentModel;
     }
 
-    public String getSn() {
-        return sn;
+    public String getEquipmentSn() {
+        return equipmentSn;
     }
 
-    public void setSn(String sn) {
-        this.sn = sn;
+    public void setEquipmentSn(String equipmentSn) {
+        this.equipmentSn = equipmentSn;
     }
 
-    public Data getGrantAt() {
+    public Date getGrantAt() {
         return grantAt;
     }
 
-    public void setGrantAt(Data grantAt) {
+    public void setGrantAt(Date grantAt) {
         this.grantAt = grantAt;
     }
 
-    public Data getActivateAt() {
+    public Date getActivateAt() {
         return activateAt;
     }
 
-    public void setActivateAt(Data activateAt) {
+    public void setActivateAt(Date activateAt) {
         this.activateAt = activateAt;
     }
 
@@ -78,19 +85,11 @@ public class EquipmentInfoDTO {
         this.contractNo = contractNo;
     }
 
-    public String getpName() {
-        return pName;
+    public String getProgramName() {
+        return programName;
     }
 
-    public void setpName(String pName) {
-        this.pName = pName;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
+    public void setProgramName(String programName) {
+        this.programName = programName;
     }
 }

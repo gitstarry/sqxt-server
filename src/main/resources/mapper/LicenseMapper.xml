@@ -23,11 +23,21 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into equipment_program_version(equipment_id,program_version_id,upgrade_at,equipment_name,equipment_sn,project_id,project_name,program_id,program_name,
+        insert into equipment_program_version(equipment_id,program_version_id,upgrade_at,equipment_name,equipment_sn,program_id,program_name,
         program_version,program_version_order,program_category)
         values (#{equipmentId,jdbcType=INTEGER},#{programVersionId,jdbcType=INTEGER},#{upgradeAt,jdbcType=DATE},
-        #{equipmentName,jdbcType=VARCHAR},#{equipmentSn,jdbcType=VARCHAR},#{projectId,jdbcType=INTEGER},#{projectName,jdbcType=VARCHAR},#{programId,jdbcType=INTEGER},#{programName,jdbcType=VARCHAR},#{programVersion,jdbcType=VARCHAR},
+        #{equipmentName,jdbcType=VARCHAR},#{equipmentSn,jdbcType=VARCHAR},#{programId,jdbcType=INTEGER},#{programName,jdbcType=VARCHAR},#{programVersion,jdbcType=VARCHAR},
         #{programVersionOrder,jdbcType=INTEGER},#{programCategory,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertLicenseMigrationDetail">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into license_migration_detail(program_name,project_id,project_name,equipment_id,equipment_name,contract_no,receive_user_name,
+        customer_name,grant_at,equipment_model,equipment_sn,activate_at)
+        values (#{programName,jdbcType=VARCHAR},#{projectId,jdbcType=INTEGER},#{projectName,jdbcType=VARCHAR},#{equipmentId,jdbcType=INTEGER},#{equipmentName,jdbcType=VARCHAR},
+        #{contractNo,jdbcType=VARCHAR},#{receiveUserName,jdbcType=VARCHAR},#{customerName,jdbcType=VARCHAR},#{grantAt,jdbcType=DATE},#{equipmentModel,jdbcType=VARCHAR},
+        #{equipmentSn,jdbcType=VARCHAR},#{activateAt,jdbcType=DATE})
     </insert>
 
     <select id="selectLicenseCount" resultType="java.lang.Integer">
@@ -90,7 +100,7 @@
          select id from program_version where program_id = #{param1} and version = #{param2}
     </select>
     <select id="checkEquipment1" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Equipment">
-        select id from equipment where name = #{equipmentName}
+        select id,name,model,sn,create_user_name,customer_name,contract_no,activate_at,grant_at from equipment where name = #{equipmentName}
     </select>
     <select id="checkProgram1" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
          select id from program where name = #{programName}

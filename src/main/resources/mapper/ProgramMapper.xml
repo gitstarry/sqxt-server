@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqut.why.authoringsystem.authoringsystem.dao.ProgramMapper">
+    <insert id="insert" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into program_version(program_id,version,orderId,status,maintainer,maintainer_contact,descripe,remark,category,program_name)
+        values (#{id,jdbcType=INTEGER},#{version,jdbcType=VARCHAR},1,1,#{maintainer,jdbcType=VARCHAR},#{maintainerContact,jdbcType=VARCHAR},
+               #{descripe,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},0,#{programName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insert1" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into program_version(program_id,version,orderId,status,maintainer,maintainer_contact,descripe,remark,category,program_name)
+        values (#{id,jdbcType=INTEGER},#{version,jdbcType=VARCHAR},1,1,#{maintainer,jdbcType=VARCHAR},#{maintainerContact,jdbcType=VARCHAR},
+        #{descripe,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},1,#{programName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertProgram" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into program(name,category,latest_version,description,remark,create_user_name)
+        values (#{name,jdbcType=VARCHAR},0,#{latestVersion,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},
+        #{createUserName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertProgram1" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into program(name,category,latest_version,description,remark,create_user_name)
+        values (#{name,jdbcType=VARCHAR},1,#{latestVersion,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},
+        #{createUserName,jdbcType=VARCHAR})
+    </insert>
+    <delete id="deleteProgramVersion">
+        delete from program_version where id = #{id}
+    </delete>
+
+    <select id="selectProgramCount" resultType="java.lang.Integer">
+        select COUNT(*) from program pm
+        <where>
+            <if test="name != '' and name != null" >
+                and pm.name like concat('%',#{name},'%')
+            </if>
+            <if test="latestVersion != '' and latestVersion != null" >
+                and latest_version like concat('%',#{latestVersion},'%')
+            </if>
+                and category = 0
+        </where>
+    </select>
+    <select id="selectProgramPage" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+        select id,pm.name,latest_version,inserted_at
+        from program pm
+        <where>
+            <if test="name != '' and name != null" >
+                and pm.name like concat('%',#{name},'%')
+            </if>
+            <if test="latestVersion != '' and latestVersion != null" >
+                and latest_version like concat('%',#{latestVersion},'%')
+            </if>
+            and category = 0
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="selectNum" resultType="java.lang.Integer">
+        select COUNT(*) from program_version where program_id = #{id}
+    </select>
+    <select id="selectProgramVersion"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion">
+        select id,version,status,maintainer,descripe,remark,inserted_at
+        from program_version where program_id = #{id}
+    </select>
+    <select id="loadProgramVersion"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion">
+        select id from program_version where version = #{param1} and program_name = #{param2}
+    </select>
+    <select id="find" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.ProgramVersion">
+        select id from program_version where id =#{id}
+    </select>
+    <select id="loadByProgram" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+        select id from program where name = #{name}
+    </select>
+
+    <select id="selectProgramCount1" resultType="java.lang.Integer">
+        select COUNT(*) from program pm
+        <where>
+            <if test="name != '' and name != null" >
+                and pm.name like concat('%',#{name},'%')
+            </if>
+            <if test="latestVersion != '' and latestVersion != null" >
+                and latest_version like concat('%',#{latestVersion},'%')
+            </if>
+            and category = 1
+        </where>
+    </select>
+    <select id="selectProgramPage1" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Program">
+        select id,pm.name,latest_version,inserted_at
+        from program pm
+        <where>
+            <if test="name != '' and name != null" >
+                and pm.name like concat('%',#{name},'%')
+            </if>
+            <if test="latestVersion != '' and latestVersion != null" >
+                and latest_version like concat('%',#{latestVersion},'%')
+            </if>
+            and category = 1
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+
+</mapper>

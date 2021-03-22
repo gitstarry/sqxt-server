@@ -1,16 +1,22 @@
 package com.cqut.why.authoringsystem.authoringsystem.entity.dto;
 
-import javax.xml.crypto.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
 
 public class EquipmentDetailInfoDTO {
     // 设备
     private String eName; // 设备名称
     private String model; // 设备型号
     private String sn; // 设备序列码
-    private Data insertedAt; // 入库时间
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date insertedAt; // 入库时间
     private String createUserName;// 登记人员
-    private Data grantAt; // 授权时间
-    private Data activateAt; // 激活时间
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date grantAt; // 授权时间
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date activateAt; // 激活时间
     private String receiveUserName;
 
     // 项目
@@ -45,14 +51,6 @@ public class EquipmentDetailInfoDTO {
         this.sn = sn;
     }
 
-    public Data getInsertedAt() {
-        return insertedAt;
-    }
-
-    public void setInsertedAt(Data insertedAt) {
-        this.insertedAt = insertedAt;
-    }
-
     public String getCreateUserName() {
         return createUserName;
     }
@@ -61,19 +59,27 @@ public class EquipmentDetailInfoDTO {
         this.createUserName = createUserName;
     }
 
-    public Data getGrantAt() {
+    public Date getInsertedAt() {
+        return insertedAt;
+    }
+
+    public void setInsertedAt(Date insertedAt) {
+        this.insertedAt = insertedAt;
+    }
+
+    public Date getGrantAt() {
         return grantAt;
     }
 
-    public void setGrantAt(Data grantAt) {
+    public void setGrantAt(Date grantAt) {
         this.grantAt = grantAt;
     }
 
-    public Data getActivateAt() {
+    public Date getActivateAt() {
         return activateAt;
     }
 
-    public void setActivateAt(Data activateAt) {
+    public void setActivateAt(Date activateAt) {
         this.activateAt = activateAt;
     }
 
@@ -124,4 +130,6 @@ public class EquipmentDetailInfoDTO {
     public void setContactTel(String contactTel) {
         this.contactTel = contactTel;
     }
+
+
 }

@@ -15,43 +15,10 @@
         <result column="contract_no" jdbcType="VARCHAR" property="contractNo" />
         <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
         <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
-        <result column="inserted_at" property="insertedAt" />
+        <result column="inserted_at" jdbcType="DATE"  property="insertedAt" />
         <result column="updated_at" property="updatedAt" />
 
     </resultMap>
-
-
-    <select id="selectAllProjectInfo" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO">
-        select p.id, p.no, p.name, p.inserted_at as insertedAt, u.name as uName,
-         c.name as cName, c.contact_name as contactName, c.contact_tel as contactTel
-        from project p
-        LEFT JOIN `user` u ON (u.id = p.create_user_id)
-        LEFT JOIN customer c ON (c.id = p.customer_id)
-        ORDER   BY
-        p.inserted_at   DESC
-    </select>
-
-    <select id="selectAllLike" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams"
-            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO">
-        select p.no, p.name, p.inserted_at as insertedAt, u.name as uName,
-        c.name as cName, c.contact_name as contactName, c.contact_tel as contactTel
-        from project p
-        INNER JOIN `user` u ON (u.id = p.create_user_id)
-        INNER JOIN customer c ON (c.id = p.customer_id)
-        <where>
-            <if test="no != '' and no != null" >
-                and p.no = #{no}
-            </if>
-            <if test="name != '' and name != null" >
-                and p.name like concat('%',#{name},'%')
-            </if>
-            <if test="cName != '' and cName != null" >
-                and c.name like concat('%',#{cName},'%')
-            </if>
-        </where>
-        ORDER   BY
-        p.inserted_at   DESC
-    </select>
 
     <insert id="addProjectInfo" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -64,11 +31,11 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into project(customer_id, no, name)
-        values(#{id}, #{no}, #{name})
+        insert into project(customer_id, no, name,create_user_name,create_user_id)
+        values(#{id}, #{no}, #{name}, #{createUserName},#{uId})
     </insert>
     <update id="updateProjectInfo">
-         update project set customer_id = #{id}, no = #{no}, name = #{name}
+         update project pt set pt.no = #{no}, pt.name = #{name}
               where id = #{pId};
     </update>
     <update id="updateCustomer">
@@ -77,34 +44,93 @@
         where id = #{id};
     </update>
 
-    <select id="selectAllEquipmentInfo" parameterType="java.lang.String" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentInfoDTO">
-        select e.id, e.name, e.model, e.sn, e.grant_at as grantAt, e.activate_at as activateAt,
-        e.receive_user_name as receiveUserName, e.contract_no as contractNo, epv.program_name as pName,
-        epv.program_category as category
-        from equipment e
-        LEFT JOIN equipment_program_version epv ON (epv.equipment_id = e.id)
-        WHERE e.project_name = #{prjName}
-    </select>
-    <select id="selectAllEquipmentDetail" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailDTO">
-        select id, name, sn, create_user_id as createUserId, inserted_at as insertedAt
-        from equipment
+    <select id="selectAllEquipmentInfo" parameterType="java.lang.Integer" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.LicenseMigrationDetail">
+        select id, program_name, project_name, equipment_name,contract_no,receive_user_name,customer_name,grant_at,equipment_model,equipment_sn,activate_at
+        from license_migration_detail
+        WHERE project_id = #{id}
     </select>
     <delete id="deleteProject" parameterType="java.lang.Integer">
         delete from project
          where id = #{id}
     </delete>
+    <delete id="deleteEquipment">
+        delete from  equipment
+        where id = #{id}
+    </delete>
     <insert id="addEquipment" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into equipment(name,model,sn, create_user_id, update_user_id)
-        values(#{name}, #{model}, #{sn}, #{id}, #{id} )
+        insert into equipment(name,model,sn, create_user_id,update_user_id ,create_user_name)
+        values(#{name}, #{model}, #{sn}, #{createUserId},#{createUserId}, #{createUserName} )
     </insert>
 
-    <select id="selectEquipmentLike" parameterType="com.cqut.why.authoringsystem.authoringsystem.entity.params.EquipmentAddParams"
-            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailDTO">
-        select id, name, sn, create_user_id as createUserId, inserted_at as insertedAt
-        from equipment
+    <select id="getEquipmentDetailInfo" parameterType="java.lang.Integer"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailInfoDTO">
+        select e.name as eName,e.model, e.sn,e.inserted_at as insertedAt,e.create_user_name as createUserName,
+        lmd.grant_at as grantAt, lmd.activate_at as activateAt,lmd.receive_user_name as receiveUserName,
+        p.name as pName, p.no as no,cus.name as cName,cus.contact_name as contactName,
+        cus.contact_tel as contactTel
+        from equipment e
+        left join license_migration_detail lmd on lmd.equipment_id = e.id
+        left join project p on p.id = lmd.project_id
+        left join customer cus ON cus.id = p.customer_id
+        where e.id = #{id}
+    </select>
+    <select id="selectProjectCount" resultType="java.lang.Integer">
+        select COUNT(*) from project p
+        LEFT JOIN `user` u ON (u.id = p.create_user_id)
+        LEFT JOIN customer c ON (c.id = p.customer_id)
+        <where>
+            <if test="no != '' and no != null" >
+                and p.no like concat('%',#{no},'%')
+            </if>
+            <if test="name != '' and name != null" >
+                and p.name like concat('%',#{name},'%')
+            </if>
+            <if test="customerName != '' and customerName != null ">
+                and customer_name like concat('%',#{customerName},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectProjectPage"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.ProjectInfoDTO">
+         select p.id, p.no, p.name, p.inserted_at as insertedAt, u.name as uName,
+         c.name as cName, c.contact_name as contactName, c.contact_tel as contactTel
+         from project p
+        LEFT JOIN `user` u ON (u.id = p.create_user_id)
+        LEFT JOIN customer c ON (c.id = p.customer_id)
+        <where>
+            <if test="no != '' and no != null" >
+                and p.no like concat('%',#{no},'%')
+            </if>
+            <if test="name != '' and name != null" >
+                and p.name like concat('%',#{name},'%')
+            </if>
+            <if test="customerName != '' and customerName != null ">
+                and customer_name like concat('%',#{customerName},'%')
+            </if>
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="selectEquipment" resultType="com.cqut.why.authoringsystem.authoringsystem.entity.LicenseMigrationDetail">
+        select distinct project_id from license_migration_detail where project_id = #{id}
+    </select>
+    <select id="selectId"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.params.ProjectInfoParams">
+        select pt.id as pId, customer.id as id,pt.no,pt.name,customer_name as cname,contact_name,contact_tel
+        from  project pt
+        left join customer on customer.id = pt.customer_id
+        where pt.id = #{id}
+    </select>
+    <select id="selectProjectId" resultType="java.lang.Integer">
+        select id from project where name = #{name}
+    </select>
+    <select id="checkProject" resultType="java.lang.Boolean">
+        select id from license_migration_detail where project_id = #{id}
+    </select>
+    <select id="selectEquipmentCount" resultType="java.lang.Integer">
+         select COUNT(*) from equipment
         <where>
             <if test="name != '' and name != null" >
                 and name = #{name}
@@ -117,14 +143,27 @@
             </if>
         </where>
     </select>
-    <select id="getEquipmentDetailInfo" parameterType="java.lang.Integer"
-            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.dto.EquipmentDetailInfoDTO">
-        select e.name as eName,e.model, e.sn,e.inserted_at as insertedAt,e.create_user_name as createUserName,
-        e.grant_at as grantAt, e.activate_at as activateAt,e.receive_user_name as receiveUserName,
-        p.name as pName, p.no as no,cus.name as cName,cus.contact_name as contactName,
-        cus.contact_name as contactTel
-        from equipment e
-        LEFT JOIN project p ON (p.name = e.project_name)
-        LEFT JOIN customer cus ON (cus.name = e.customer_name)
+    <select id="selectEquipmentPage"
+            resultType="com.cqut.why.authoringsystem.authoringsystem.entity.Equipment">
+        select id, name,model, sn, create_user_id as createUserId,create_user_name as createUserName, inserted_at as insertedAt
+        from equipment
+        <where>
+            <if test="name != '' and name != null" >
+                and name = #{name}
+            </if>
+            <if test="model != '' and model != null" >
+                and model like concat('%',#{model},'%')
+            </if>
+            <if test="sn != '' and sn != null" >
+                and sn like concat('%',#{sn},'%')
+            </if>
+        </where>
+        limit ${(page- 1)* pageSize}, #{pageSize}
+    </select>
+    <select id="selectEquipmentId" resultType="java.lang.Integer">
+        select id from equipment where name = #{name}
+    </select>
+    <select id="checkEquipment" resultType="java.lang.Boolean">
+         select distinct equipment_id from equipment_program_version where equipment_id = #{id}
     </select>
 </mapper>

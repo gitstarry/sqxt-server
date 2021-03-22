@@ -14,8 +14,6 @@ public class EquipmentProgramVersion {
     private String remark;
     private String equipmentName;
     private String equipmentSn;
-    private Integer projectId;
-    private String projectName;
     private Integer programId;
     private String programName;
     private String programVersion;
@@ -126,19 +124,4 @@ public class EquipmentProgramVersion {
         this.programVersionOrder = programVersionOrder;
     }
 
-    public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
 }

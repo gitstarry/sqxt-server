@@ -1,13 +1,20 @@
 package com.cqut.why.authoringsystem.authoringsystem.entity.dto;
 
-import javax.xml.crypto.Data;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
 
 public class EquipmentDetailDTO {
     private Integer id;
     private String name;
     private String sn;
-    private String createUserId;
-    private Data insertedAt;
+    private String model;
+    private Integer createUserId;
+    private String createUserName;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date insertedAt;
+    private Boolean check;
 
     public Integer getId() {
         return id;
@@ -33,19 +40,43 @@ public class EquipmentDetailDTO {
         this.sn = sn;
     }
 
-    public String getCreateUserId() {
+    public Integer getCreateUserId() {
         return createUserId;
     }
 
-    public void setCreateUserId(String createUserId) {
+    public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
     }
 
-    public Data getInsertedAt() {
+    public Date getInsertedAt() {
         return insertedAt;
     }
 
-    public void setInsertedAt(Data insertedAt) {
+    public void setInsertedAt(Date insertedAt) {
         this.insertedAt = insertedAt;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Boolean getCheck() {
+        return check;
+    }
+
+    public void setCheck(Boolean check) {
+        this.check = check;
     }
 }

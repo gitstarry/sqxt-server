@@ -1,5 +1,6 @@
 package com.cqut.why.authoringsystem.authoringsystem.entity.dto;
 
+
 public class ProjectInfoDTO {
     private Integer id;
     private String no;
@@ -11,6 +12,7 @@ public class ProjectInfoDTO {
     private String cName;
     private String contactName;
     private String contactTel;
+    private Boolean check;
 
     public String getNo() {
         return no;
@@ -74,5 +76,13 @@ public class ProjectInfoDTO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Boolean getCheck() {
+        return check;
+    }
+
+    public void setCheck(Boolean check) {
+        this.check = check;
     }
 }
